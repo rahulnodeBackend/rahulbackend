@@ -30,11 +30,6 @@ exports.findAll = async (req, res) => {
     }
 };
 
-
-
-
-
-
 exports.cities = async (req, res) => {
     getCities = await StateProvider.getCities(req, res);
     if (getCities.length != 0) {
@@ -44,6 +39,15 @@ exports.cities = async (req, res) => {
     }
 };
 
+// Here get state according to id
+exports.get = async (req, res) => {
+    result = await StateProvider.show(req, res);
+    if (result) {
+        return ApiHelper.successError(res, 200, "Record found", result);
+    } else {
+        return ApiHelper.successError(res, 200, "Record not found", []);
+    }
+};
 //===================  Update State by the id in the request  ============================
 
 exports.update = async (req, res) => {

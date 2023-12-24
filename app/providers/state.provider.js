@@ -1,16 +1,8 @@
 const db = require("../models");
-const ApiHelper = require("../helpers/apiHelper");
-const { query } = require("express");
-const {  stringQueryResponse, NumericQueryResponse } = require("../common/common");
+const { stringQueryResponse, NumericQueryResponse } = require("../common/common");
 const State = db.States;
-const User = db.User;
-const Op = db.Sequelize.Op;
-
-
 //=================== create State ============================
-
 async function createState(req, res) {    
-       
     const DublicateData = await State.findOne({
         where: {
             code     : req.body.code,
@@ -25,53 +17,56 @@ async function createState(req, res) {
     }
 }
 
-
+// Here show method call
+async function show(req, res) {
+    const id = req.params.id;
+    countryData = await Country.findByPk(id);
+    if (countryData) {
+        return countryData;
+    }
+}
 //=================== get All State ============================
-
 async function getAllState (req, res) {   
-     
-            let id = req.query.id || "";
-            let code = req.query.code || "";
-            let name = req.query.name || "";
-            let sortName = req.query.sortName || "";
-            let country_code = req.query.state_code || "";
-            let limit = parseInt(req.query.limit)
-            let offset =  parseInt(req.query.offset)
-            let condition;          
-
-            if(id){
-                id =  await NumericQueryResponse(id, columnName="id")
-                condition = {where :{id},limit:limit,offset:offset}
-            }
-            else if(code){
-                code =  await stringQueryResponse(code,columnName="code")
-                condition = {where :{code},limit:limit,offset:offset}
-            }             
-            else if(sortName){
-                sortName =  await stringQueryResponse(sortName,columnName="sortName")
-                condition = {where :{sortName},limit:limit,offset:offset}
-            }else if(name){        
-                name = await stringQueryResponse(name,columnName="name")
-                condition = {where :{name},limit:limit,offset:offset}
-            } else if(country_code){
-                country_code = await NumericQueryResponse(country_code,columnName="country_code")
-                condition = {where :{country_code},limit:limit,offset:offset}
-            }                                                                 
-            const result = await State.findAndCountAll(condition);        
-            return result;
+    let id = req.query.id || "";
+    let code = req.query.code || "";
+    let name = req.query.name || "";
+    let sortName = req.query.sortName || "";
+    let country_code = req.query.state_code || "";
+    let limit = parseInt(req.query.limit)
+    let offset =  parseInt(req.query.offset)
+    let condition;          
+    if(id){
+        id =  await NumericQueryResponse(id, columnName="id")
+        condition = {where :{id},limit:limit,offset:offset}
+    }
+    else if(code){
+        code =  await stringQueryResponse(code,columnName="code")
+        condition = {where :{code},limit:limit,offset:offset}
+    }             
+    else if(sortName){
+        sortName =  await stringQueryResponse(sortName,columnName="sortName")
+        condition = {where :{sortName},limit:limit,offset:offset}
+    }else if(name){        
+        name = await stringQueryResponse(name,columnName="name")
+        condition = {where :{name},limit:limit,offset:offset}
+    } else if(country_code){
+        country_code = await NumericQueryResponse(country_code,columnName="country_code")
+        condition = {where :{country_code},limit:limit,offset:offset}
+    }                                                                 
+    const result = await State.findAndCountAll(condition);        
+    return result;
 }
 
 async function updateState(req, res) {
-
     console.log(req.query)
     console.log(req.body)
-    const Id = req.query.id;       
+    const id = req.query.id;       
     StateData = await State.update(req.body, {
-        where: { id : Id },
+        where: { id : id },
     })
     if (StateData) {
         Statedata = await State.findOne(
-            { where: { id : Id },
+            { where: { id : id },
         });
         return Statedata;
         
@@ -83,16 +78,17 @@ async function updateState(req, res) {
 //=================== delete State ============================
 
 async function deleteState(req, res) {
-    const Id = req.query.id;
+    const id = req.query.id;
     result = await State.destroy({
-        where: { id: Id }
+        where: { id: id }
     })
     return result;
 }
 
 
 StateProvider = {
-    createState : createState,    
+    createState : createState,
+    show : show,   
     updateState : updateState,
     deleteState : deleteState,
     getAllState : getAllState,      

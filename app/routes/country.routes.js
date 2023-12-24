@@ -4,17 +4,11 @@ const CountryController  = require("../controllers/country.controller");
 const { CountryValidation } = require("../validations");
 
 // Create a new country
-router.post("/createCountry",  CountryController.create);
-// router.post("", [CountryValidation.countryCheck],  CountryController.create);
 
-
-router.get("getCountry", CountryController.findAll);
-
-
-router.put("/updateCountry", CountryController.update);
-
-// Delete a country with id
-router.delete("/deleteCountry", CountryController.delete);
-
+router.get("", CountryController.getAll);
+router.post("",  CountryController.create);
+router.get("/:id",  CountryController.get);
+router.put("/:id", CountryController.update);
+router.delete("/:id", CountryController.delete);
 
 module.exports = router;

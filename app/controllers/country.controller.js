@@ -2,23 +2,9 @@ const db = require("../models");
 const ApiHelper = require("../helpers/apiHelper");
 const CountryProvider = require("../providers/country.provider");
 
-
-//Here create user
-exports.create = async (req, res) => {
-    createCountry = await CountryProvider.createCountry(req, res);
-    if (createCountry) {
-        if (createCountry == 1) {
-            return ApiHelper.successError(res, 203, "Country name already exist !", []);
-          }
-        return ApiHelper.successError(res, 200, 'Country Added Successfully', createCountry);
-    } else {
-        return ApiHelper.successError(res, 500, 'Country Added Failed Please Try Again', []);
-    }
-};
-
 //Here get 
-exports.findAll = async (req, res) => {
-    getAllCountries = await CountryProvider.getAllCountries(req, res);
+exports.getAll = async (req, res) => {
+    getAllCountries = await CountryProvider.getAll(req, res);
     if (getAllCountries.length != 0) {
         return ApiHelper.successError(res, 200, "Record Found", getAllCountries);
     } else {
@@ -26,11 +12,22 @@ exports.findAll = async (req, res) => {
     }
 };
 
-
-//===================  Find a Single Country with an id  ============================
-
-exports.findOne = async (req, res) => {
-    showCountry = await CountryProvider.showCountry(req, res);
+//Here create country
+exports.create = async (req, res) => {
+    createCountry = await CountryProvider.createUpdate(req, res);
+    if (createCountry) {
+        if (createCountry == 1) {
+            return ApiHelper.successError(res, 203, "Country name already exist !", []);
+        }else{
+            return ApiHelper.successError(res, 200, 'Country Added Successfully', createCountry);
+        }
+    } else {
+        return ApiHelper.successError(res, 500, 'Country Added Failed Please Try Again', []);
+    }
+};
+//Here get country using id
+exports.get = async (req, res) => {
+    showCountry = await CountryProvider.get(req, res);
     if (showCountry) {
         return ApiHelper.successError(res, 200, "Record found", showCountry);
     } else {
@@ -38,11 +35,9 @@ exports.findOne = async (req, res) => {
     }
 };
 
-
 //===================  Update Country by the id in the request  ============================
-
 exports.update = async (req, res) => {
-    result = await CountryProvider.updateCountry(req, res);
+    result = await CountryProvider.createUpdate(req, res);
     if (result) {
         return ApiHelper.successError(res, 200, "Country updated successfully", result);
     } else {
@@ -50,11 +45,9 @@ exports.update = async (req, res) => {
     }
 };
 
-
-//===================  Delete a Country with the specified id in the request  ============================
-
+//Here country delete using id
 exports.delete = async (req, res) => {
-    result = await CountryProvider.deleteCountry(req, res);
+    result = await CountryProvider.destroy(req, res);
     if (result) {
         if (result == 1) {
             return ApiHelper.successError(res, 200, "Country deleted successfully!", result);
