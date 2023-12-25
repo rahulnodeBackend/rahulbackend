@@ -23,6 +23,7 @@ if(databaseMigration=="Yes"){
     seeder.StateSeeder()
     seeder.CitySeeder()
     //alterTable.userTable();
+    
   });
 }
 
